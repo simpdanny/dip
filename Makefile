@@ -42,4 +42,4 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 .PHONY: clean
 
 clean:
-	@rm -f $(OBJ) $(TEST_TARGET) $(TARGET) 
+	@rm -rf $(OBJDIR) $(BINDIR) 
