@@ -1,0 +1,26 @@
+AHEQManipulator.o: src/AHEQManipulator.cpp include/AHEQManipulator.h \
+ include/Manipulator.h include/RawImage.h include/Histogram.h \
+ include/HistogramWindow.h include/Window.h
+FlipManipulator.o: src/FlipManipulator.cpp include/FlipManipulator.h \
+ include/Manipulator.h include/RawImage.h include/Histogram.h
+HEQManipulator.o: src/HEQManipulator.cpp include/HEQManipulator.h \
+ include/TransferManipulator.h include/Manipulator.h include/RawImage.h \
+ include/Histogram.h
+Histogram.o: src/Histogram.cpp include/Histogram.h
+HistogramWindow.o: src/HistogramWindow.cpp include/HistogramWindow.h \
+ include/Window.h include/RawImage.h include/Histogram.h
+RawImage.o: src/RawImage.cpp include/RawImage.h include/Histogram.h
+TransferManipulator.o: src/TransferManipulator.cpp \
+ include/TransferManipulator.h include/Manipulator.h include/RawImage.h \
+ include/Histogram.h
+Window.o: src/Window.cpp include/Window.h include/RawImage.h \
+ include/Histogram.h
+flip.o: src/bin/flip.cpp include/RawImage.h include/Histogram.h \
+ include/FlipManipulator.h include/Manipulator.h include/RawImage.h
+histogram.o: src/bin/histogram.cpp include/RawImage.h include/Histogram.h \
+ include/Histogram.h
+heq.o: src/bin/heq.cpp include/HEQManipulator.h \
+ include/TransferManipulator.h include/Manipulator.h include/RawImage.h \
+ include/Histogram.h
+aheq.o: src/bin/aheq.cpp include/AHEQManipulator.h include/Manipulator.h \
+ include/RawImage.h include/Histogram.h

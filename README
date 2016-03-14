@@ -1,0 +1,100 @@
+# DIP Homework Assignment #1
+# March 15, 2016
+# Name: Simpdanny (Hsiang-Hung, Lu)
+# ID #: R03942039
+# email: simpdanny@gmail.com
+# compiled on 14.04.1-Ubuntu with g++ 4.8.4
+
+# This file defines only essential compilation cmds.
+#     1. All the original images including bonus.raw should be placed in raw/
+#     2. Basically, you could type make -f README -j 8 to complete the whole jobs.
+#     3. There are some progress messages when compiling programs and running solutions.
+#     4. The file generated will be placed under output/, each subproblem with 1 subdirectory.
+#     5. Detail information should lie in the report. This README is naive but hard to comprehend
+
+CXX=g++
+INCLUDE=include
+#CXXFLAGS=-g -Wall 
+#CXXFLAGS=-O3
+CXXFLAGS+=-std=c++11
+CXXFLAGS+=-I $(INCLUDE)
+
+SRCDIR=src
+OBJDIR=obj
+BINDIR=build
+DEPDIR=.d
+OUTPUTDIR=output
+TARGET_SRC =$(wildcard $(SRCDIR)/bin/*.cpp)
+TARGET=$(TARGET_SRC:$(SRCDIR)/bin/%.cpp=%)
+
+
+# convert.im6 is a helper program that can help turn .raw file into .png file. 
+# In my platform, enter apt-get install convert-cli can easily get it.
+# If you want to enable this function, please set flag USE_CONVERT=1
+# and all the .png file would be produced together with corresponding .raw file.
+# You have to install the program by yourself.
+
+ifdef USE_CONVERT
+CONVERT= convert -depth 8 -size 256x256 gray:$(1) $(2);
+endif
+
+# I utilize matlab to help display histogram.
+# normally, histogram is stored in a plain text file with tuples of ( pixel_value , counts )
+# delimited by one space. 
+# In order to display a better histogram, 
+# an extra shell script is ready to call matlab function.
+# I use MATLAB R2015a and backward compatibility is NOT checked at all.
+# If you want to see the histogram figure too, set flag USE_MATLAB=1
+# PERFORMANCE WARNING: this feature is not optimzed and degrades the performance alot.
+
+ifdef USE_MATLAB
+MATLAB = $(SRCDIR)/matlab/draw_histogram.sh $(1) $(2) 2> /dev/null > /dev/null;
+endif
+
+vpath %.o ./$(OBJDIR)
+vpath %.cpp ./$(SRCDIR)/
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+DEP = $(SRC:$(SRCDIR)/%.cpp=$(DEPDIR)/%.d)
+BIN = $(TARGET:%=$(BINDIR)/%)
+
+# The solution scripts are contained in hw1.mk
+# Most of the procedure is purely hardcoded into makefile commands
+# But the essential programs all lie in the build with simple usage.
+
+include hw1.mk
+
+clean:
+	@rm -rf $(OBJDIR) $(BINDIR) $(OUTPUTDIR) $(DEPDIR)
+
+-include $(DEP)
+
+$(OBJ): | $(OBJDIR)
+$(TARGET): | $(BINDIR) $(BIN)
+$(DEP): | $(DEPDIR)
+$(HW): | $(OUTPUTDIR)
+
+$(OBJDIR):
+	@mkdir -p $@
+$(BINDIR):
+	@mkdir -p $@
+$(OUTPUTDIR):
+	@mkdir -p $@
+$(DEPDIR):
+	@mkdir -p $@
+
+$(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d
+	@echo "$(CXX) $(CXXFLAGS) -c $< -o $@"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BINDIR)/% : $(OBJ) $(SRCDIR)/bin/%.cpp 
+	@echo "$(CXX) $(CXXFLAGS) $^ -o $@"
+	@$(CXX) $(CXXFLAGS) $^ -o $@
+$(DEPDIR)/%.d : $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -MM $^ -MT $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$<) -MF $@ -MMD -MP
+
+
+
+
+
+# DO NOT DELETE

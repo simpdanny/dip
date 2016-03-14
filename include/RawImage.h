@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include "Histogram.h"
 #ifndef RAW_IMAGE
 #define RAW_IMAGE
 using namespace std;
 class RawImage {
 public:
     RawImage() {}
-    RawImage(const int& width, const int& height) 
-        : _width( width ) , _height( height ) {
+    RawImage(const int& width, const int& height) {
         reshape( width, height ); 
     }
     RawImage(const string& filename, const int& width, const int& height) 
@@ -25,6 +25,9 @@ public:
     void clear();
     void reshape( const int&, const int& );
     bool empty() const;
+    int getWidth() const { return _width; }
+    int getHeight() const { return _height; }
+    Histogram getHistogram() const;
 private:
     unsigned char* _data = NULL;
     int _width = 0;
